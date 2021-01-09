@@ -13,22 +13,18 @@ navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
-    // 그냥 화면을 그림
-    console.log("1")
     // 이벤트를 보냄(다른 유저가 들어왔을 때 실행)
     socket.on('user-connected', (userId, userStream) => {
-        // 새로들어온 사람의 아이디
-        console.log("which: " + userId)
+        // 상대방의 스트림을 내 화면에 띄워줌
+        // peerJS에서 call을 요청하는 부분
         connectToNewUser(userId, stream)
     })
-    // 답을 한다.
+    // peerJS에서 call 요청에 따른 answer부분
     peer.on('call', call => {
-        console.log("3")
         call.answer(stream)
-        //console.log("이건 뭐지. " + userId)
-        // 상대방의 stream을 추가한다.
         const video = document.createElement('video')
         call.on('stream', userVideoStream => {
+            // 상대방에게 내 화면을 띄워줌
             addVideoStream(video, userVideoStream)
         })
     })
@@ -43,8 +39,6 @@ peer.on('open', id => {
         // 그냥 화면을 그림
         addVideoStream(myVideo, stream)
         socket.emit('join-room', ROOM_ID, id, stream)
-        console.log('입장하였습니다.')
-        console.log("my Id: " + id)
     }).catch(err => console.log(err))
 })
 
@@ -55,10 +49,10 @@ const connectToNewUser = (userId, stream) => {
     const video = document.createElement('video')
     // 상대방의 stream을 내 화면에 추가한다.
     // 비디오 생성
-    call.answer(stream)
-    addVideoStream(video, stream)
+    //call.answer(stream)
+    //addVideoStream(video, stream)
     call.on('stream', userVideoStream => {
-        console.log("화면 추가 함수를 실행")
+        console.log("4")
         // 상대방 쪽에 보낸사랑의 영상을 띄워줌
         addVideoStream(video, userVideoStream)
     })
