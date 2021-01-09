@@ -26,11 +26,11 @@ app.get('/:room', (req, res) => {
 io.on('connection', socket => {
     // implement event listener
     // get information from script.js
-    socket.on('join-room', (roomId, userId) => {
+    socket.on('join-room', (roomId, userId, stream) => {
         console.log(roomId, userId)
         socket.join(roomId)
-        //send information about userId
-        socket.to(roomId).broadcast.emit('user-connected', userId)
+        //send information
+        socket.to(roomId).broadcast.emit('user-connected', userId, stream)
     })
 })
 
